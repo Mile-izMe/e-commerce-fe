@@ -56,13 +56,25 @@ năng. Logic của Catalog, Auth, Cart và Account nên nằm tại feature tư�
 dùng chung trong `shared/components/ui`, tiện ích HTTP/formatting trong
 `shared/lib`, và kiểu dùng chung trong `shared/types`.
 
-Khi viết API, dùng endpoint hiện có của backend: `/products`, `/auth`,
-`/users/me` và `/cart`. Chưa tạo màn hình checkout thành công vì backend chưa
-có Orders/Payment. Không đặt secret hoặc refresh token trong source code.
+`src/shared/lib/api.ts` là Axios client dùng chung. `requestData<T>` trả về
+`data`, `requestCursorPage<T>` trả về `{ items, meta }`, còn lỗi được đổi thành
+`ApiClientError` với `message`, `statusCode`, `errorCode`, `traceId` và
+`subErrors`. API của từng feature chỉ khai báo endpoint; xem
+`src/features/catalog/api/catalog.api.ts` để gọi `/products` với `cursor`,
+`limit` và `category`. Khi cần gửi Bearer token, truyền `headers` trong cấu hình
+request; không lưu refresh token trong source code.
+
+Trên trình duyệt, request tới `/backend/*` được Next.js chuyển tiếp tới BE.
+Mặc định BE ở `http://127.0.0.1:3000`; nếu khác, đặt `BACKEND_URL` trong
+`.env.local` ở thư mục gốc FE rồi khởi động lại Next.js. Server-side request
+gọi thẳng `BACKEND_URL`. Cấu hình proxy giúp gọi API trên browser mà không cần
+CORS ở BE.
+
+Chưa tạo màn hình checkout thành công vì backend chưa có Orders/Payment.
 
 Để chạy:
 
 ```bash
 pnpm install
-pnpm dev
+pnpm dev --port 3001
 ```

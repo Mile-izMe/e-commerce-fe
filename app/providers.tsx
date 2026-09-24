@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
 import { useState } from "react";
 import {
   MutationCache,
@@ -12,17 +13,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        // Handle exception for POST, PUT, DELETE (useMutation)
         mutationCache: new MutationCache({
-          onError: (error: any) => {
-            toast.error(error);
+          onError: (error) => {
+            toast.error(error.message);
           },
         }),
 
-        // for GET (useQuery)
         queryCache: new QueryCache({
-          onError: (error: any) => {
-            toast.error(error);
+          onError: (error) => {
+            toast.error(error.message);
           },
         }),
       }),
