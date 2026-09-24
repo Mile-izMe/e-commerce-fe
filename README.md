@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# E-commerce FE
 
-## Getting Started
+Frontend dùng Next.js App Router. Cấu trúc được chia theo **route** và **tính năng**:
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```text
+app/
+  (store)/
+    products/
+      [slug]/
+    cart/
+  (auth)/
+    login/
+    register/
+  (account)/
+    account/
+      addresses/
+  layout.tsx
+  page.tsx
+  globals.css
+src/
+  features/
+    catalog/
+      api/
+      components/
+      types/
+    auth/
+      api/
+      components/
+      types/
+    cart/
+      api/
+      components/
+      types/
+    account/
+      api/
+      components/
+      types/
+  shared/
+    components/
+      ui/
+    lib/
+    types/
+public/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`app/` định nghĩa URL, layout và trang. Các thư mục trong ngoặc chỉ nhóm route,
+không xuất hiện trên URL: `app/(store)/cart/page.tsx` sẽ là `/cart`. Hiện
+các thư mục route mới chỉ là khung; thêm `page.tsx` khi triển khai màn hình.
+`app/page.tsx` đang là trang mặc định của Next.js và có thể thay bằng trang
+catalog khi bắt đầu demo.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`src/features/<tính năng>/api` chứa hàm gọi backend và chuyển đổi dữ liệu;
+`components` chứa UI riêng của tính năng; `types` chứa kiểu dữ liệu của tính
+năng. Logic của Catalog, Auth, Cart và Account nên nằm tại feature tương ứng.
+`src/shared/` chỉ chứa phần thực sự được nhiều feature dùng chung. Đặt UI
+dùng chung trong `shared/components/ui`, tiện ích HTTP/formatting trong
+`shared/lib`, và kiểu dùng chung trong `shared/types`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Khi viết API, dùng endpoint hiện có của backend: `/products`, `/auth`,
+`/users/me` và `/cart`. Chưa tạo màn hình checkout thành công vì backend chưa
+có Orders/Payment. Không đặt secret hoặc refresh token trong source code.
 
-## Learn More
+Để chạy:
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm install
+pnpm dev
+```
