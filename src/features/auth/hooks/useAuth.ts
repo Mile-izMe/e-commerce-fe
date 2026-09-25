@@ -1,11 +1,14 @@
-"use client";
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store";
 import { ApiClientError } from "@/src/shared/lib/api";
 import { authApi } from "../api";
-import type { AuthResponse, LoginInput, RegisterInput, UserType } from "../types";
+import type {
+  AuthResponse,
+  LoginInput,
+  RegisterInput,
+  UserType,
+} from "../types";
 
 const profileKey = ["auth", "me"] as const;
 
@@ -43,7 +46,8 @@ export function useProfile() {
   return useQuery<UserType>({
     queryKey: profileKey,
     queryFn: () => {
-      if (!accessToken) throw new ApiClientError("Chưa có phiên đăng nhập.", 401);
+      if (!accessToken)
+        throw new ApiClientError("Chưa có phiên đăng nhập.", 401);
       return authApi.getProfile(accessToken);
     },
     enabled: accessToken !== null,

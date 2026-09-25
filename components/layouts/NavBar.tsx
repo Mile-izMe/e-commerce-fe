@@ -3,16 +3,7 @@
 import { AuthModal, useLogout } from "@/src/features/auth";
 import type { AuthMode } from "@/src/features/auth/components/AuthModal";
 import { useAuthStore } from "@/store";
-import {
-  Briefcase,
-  Clock,
-  Computer,
-  LayoutGrid,
-  Mars,
-  TrendingUp,
-  User,
-  Venus,
-} from "lucide-react";
+import { Briefcase, Computer, Shirt, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -33,9 +24,8 @@ export default function NavBar() {
   }
 
   const navLinks = [
-    { icon: TrendingUp, name: "new", path: "/new" },
-    { icon: Mars, name: "Man", path: "/man" },
-    { icon: Venus, name: "Women", path: "/woman" },
+    { icon: TrendingUp, name: "Trending", path: "/new" },
+    { icon: Shirt, name: "clothing", path: "/clothes" },
     { icon: Briefcase, name: "accessories", path: "/accessory" },
     { icon: Computer, name: "technical", path: "/technical" },
   ];
@@ -43,18 +33,20 @@ export default function NavBar() {
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b border-neutral-200/60 bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-y-2 px-4 py-3 sm:px-6 lg:h-20 lg:flex-nowrap lg:px-8 lg:py-0">
           <Link
             href="/"
-            className="flex items-center gap-2 text-xl font-semibold tracking-tighter text-neutral-950"
+            className="flex shrink-0 items-center gap-2 text-xl font-semibold tracking-tighter text-neutral-950"
             aria-label="Atelier Home"
           >
             <span className="h-2.5 w-2.5 rounded-full bg-neutral-950" />
             ATELIER
           </Link>
 
-          {/* Minimalist Center Nav: Store / Booking History / Profile */}
-          <nav className="flex items-center gap-1 sm:gap-2">
+          <nav
+            aria-label="Điều hướng chính"
+            className="order-last flex w-full items-center gap-1 overflow-x-auto lg:order-none lg:w-auto lg:gap-2"
+          >
             {navLinks.map((link) => {
               const isActive = normalizedPath === link.path;
               const Icon = link.icon;
@@ -63,7 +55,7 @@ export default function NavBar() {
                 <Link
                   key={link.path}
                   href={link.path}
-                  className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition cursor-pointer ${
+                  className={`flex shrink-0 items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition cursor-pointer ${
                     isActive
                       ? "bg-neutral-950 text-white font-semibold shadow-2xs"
                       : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100/80"
@@ -79,7 +71,7 @@ export default function NavBar() {
             })}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             {status === "restoring" ? (
               <div
                 role="status"
