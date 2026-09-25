@@ -77,7 +77,7 @@ function normalizeApiError(error: unknown): ApiClientError {
 }
 
 const backendUrl =
-  process.env.BACKEND_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:3000";
+  process.env.BACKEND_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:3001";
 
 // Browser requests go through Next.js so the backend does not need browser CORS.
 export const api = axios.create({

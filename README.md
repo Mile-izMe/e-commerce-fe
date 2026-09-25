@@ -65,7 +65,7 @@ dùng chung trong `shared/components/ui`, tiện ích HTTP/formatting trong
 request; không lưu refresh token trong source code.
 
 Trên trình duyệt, request tới `/backend/*` được Next.js chuyển tiếp tới BE.
-Mặc định BE ở `http://127.0.0.1:3000`; nếu khác, đặt `BACKEND_URL` trong
+Mặc định BE ở `http://127.0.0.1:3001`; nếu khác, đặt `BACKEND_URL` trong
 `.env.local` ở thư mục gốc FE rồi khởi động lại Next.js. Server-side request
 gọi thẳng `BACKEND_URL`. Cấu hình proxy giúp gọi API trên browser mà không cần
 CORS ở BE.

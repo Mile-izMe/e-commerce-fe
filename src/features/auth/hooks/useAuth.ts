@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store";
 import { ApiClientError } from "@/src/shared/lib/api";
@@ -11,7 +10,6 @@ import type { AuthResponse, LoginInput, RegisterInput, UserType } from "../types
 const profileKey = ["auth", "me"] as const;
 
 export function useLogin() {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const setAuth = useAuthStore((state) => state.setAuth);
 
@@ -21,13 +19,11 @@ export function useLogin() {
       setAuth(session);
       queryClient.setQueryData(profileKey, session.user);
       toast.success("Đăng nhập thành công");
-      router.push("/");
     },
   });
 }
 
 export function useRegister() {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const setAuth = useAuthStore((state) => state.setAuth);
 
@@ -37,7 +33,6 @@ export function useRegister() {
       setAuth(session);
       queryClient.setQueryData(profileKey, session.user);
       toast.success("Đăng ký thành công");
-      router.push("/");
     },
   });
 }
