@@ -3,6 +3,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { catalogApi } from "../api";
 import type { CatalogQueryParams } from "../types";
+import { ApiClientError } from "@/src/shared/lib/api";
 
 type ProductFilters = Omit<CatalogQueryParams, "cursor">;
 
@@ -40,5 +41,8 @@ export function useProductDetail(slug: string) {
     queryKey: ["products", "detail", slug],
     queryFn: () => catalogApi.getBySlug(slug),
     enabled: slug.trim().length > 0,
+    retry: (count, error) =>
+      !(error instanceof ApiClientError && error.statusCode === 404) &&
+      count < 2,
   });
 }
