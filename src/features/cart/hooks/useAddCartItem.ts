@@ -16,7 +16,7 @@ export function useAddCartItem() {
       if (!accessToken || !user)
         throw new ApiClientError("Vui lòng đăng nhập để thêm vào giỏ.", 401);
       return {
-        cart: await cartApi.addItem(item, accessToken),
+        cart: await cartApi.addItem(item),
         userId: user.id,
       };
     },

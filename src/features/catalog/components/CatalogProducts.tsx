@@ -8,21 +8,22 @@ import ProductGridSkeleton from "./ProductGridSkeleton";
 
 export default function CatalogProducts() {
   const { data: categories, isPending, isError, refetch } = useCategories();
+  // slug: demo-accessories, demo-clothing, demo-electronics
 
   return (
     <section
       id="catalog"
       aria-labelledby="catalog-heading"
-      className="scroll-mt-24 bg-[#fafaf8] px-5 py-14 sm:px-8 sm:py-20"
+      className="scroll-mt-24 bg-background px-5 py-14 sm:px-8 sm:py-20"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="border-b border-neutral-200 pb-7">
-          <p className="mb-3 text-[10px] tracking-[0.25em] text-neutral-500">
+        <div className="border-b border-line pb-7">
+          <p className="mb-3 text-[10px] tracking-[0.25em] text-muted">
             THE COLLECTION
           </p>
           <h2
             id="catalog-heading"
-            className="text-3xl font-normal tracking-tight text-neutral-900 sm:text-4xl"
+            className="text-3xl font-normal tracking-tight text-foreground sm:text-4xl"
           >
             Tìm điều bạn yêu thích.
           </h2>
@@ -33,10 +34,7 @@ export default function CatalogProducts() {
           </div>
         )}
         {isError && (
-          <div
-            role="alert"
-            className="py-12 text-center text-sm text-neutral-600"
-          >
+          <div role="alert" className="py-12 text-center text-sm text-muted">
             <p>Chưa tải được danh mục sản phẩm.</p>
             <button
               type="button"
@@ -57,7 +55,7 @@ export default function CatalogProducts() {
                 <Link
                   key={category.id}
                   href={`/categories/${encodeURIComponent(category.slug)}`}
-                  className="inline-flex items-center gap-5 rounded-full border border-neutral-200 bg-white px-4 py-2 text-xs text-neutral-600 transition hover:border-neutral-900"
+                  className="inline-flex items-center gap-5 rounded-full border border-line bg-surface px-4 py-2 text-xs text-muted transition hover:border-foreground"
                 >
                   {category.name}
                   <ArrowUpRight aria-hidden className="h-3 w-3" />
@@ -74,7 +72,7 @@ export default function CatalogProducts() {
           </>
         )}
         {categories?.length === 0 && (
-          <p className="py-20 text-center text-sm text-neutral-500">
+          <p className="py-20 text-center text-sm text-muted">
             Bộ sưu tập đang được chuẩn bị.
           </p>
         )}

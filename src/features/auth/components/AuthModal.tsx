@@ -26,7 +26,7 @@ function AuthModal({ onClose, isOpen, mode, onModeChange }: AuthModalProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-neutral-950/40 backdrop-blur-md cursor-pointer"
+            className="fixed inset-0 bg-black/50 backdrop-blur-md cursor-pointer"
           />
 
           {/* Modal Container */}
@@ -35,7 +35,7 @@ function AuthModal({ onClose, isOpen, mode, onModeChange }: AuthModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-neutral-200/80 p-6 sm:p-8 z-10 overflow-hidden"
+            className="relative w-full max-w-md bg-surface rounded-3xl shadow-2xl border border-line/80 p-6 sm:p-8 z-10 overflow-hidden"
             role="dialog"
             aria-modal="true"
             aria-labelledby="auth-modal-title"
@@ -44,7 +44,7 @@ function AuthModal({ onClose, isOpen, mode, onModeChange }: AuthModalProps) {
             <button
               id="auth-modal-close-btn"
               onClick={onClose}
-              className="absolute top-5 right-5 p-2 rounded-full text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition cursor-pointer"
+              className="absolute top-5 right-5 p-2 rounded-full text-subtle hover:text-foreground hover:bg-surface-muted transition cursor-pointer"
               aria-label="Close"
             >
               <X className="w-4 h-4" />
@@ -52,18 +52,18 @@ function AuthModal({ onClose, isOpen, mode, onModeChange }: AuthModalProps) {
 
             {/* Apple-style Brand Header */}
             <div className="text-center space-y-2 mb-6">
-              <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-neutral-950 text-white mx-auto shadow-xs">
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-action text-action-foreground mx-auto shadow-xs">
                 <span className="text-lg font-semibold tracking-tighter">
                   A
                 </span>
               </div>
               <h2
                 id="auth-modal-title"
-                className="text-2xl font-semibold tracking-tight text-neutral-950"
+                className="text-2xl font-semibold tracking-tight text-foreground"
               >
                 {mode === "signin" ? "Atelier Account" : "Create Atelier ID"}
               </h2>
-              <p className="text-xs text-neutral-500 max-w-xs mx-auto">
+              <p className="text-xs text-muted max-w-xs mx-auto">
                 {mode === "signin"
                   ? "Đăng nhập để quản lý tài khoản của bạn."
                   : "Tạo tài khoản để bắt đầu mua sắm."}
@@ -71,15 +71,15 @@ function AuthModal({ onClose, isOpen, mode, onModeChange }: AuthModalProps) {
             </div>
 
             {/* Apple-style Segmented Control */}
-            <div className="p-1 bg-neutral-100 rounded-full flex items-center mb-6">
+            <div className="p-1 bg-surface-muted rounded-full flex items-center mb-6">
               <button
                 type="button"
                 id="auth-tab-signin"
                 onClick={() => onModeChange("signin")}
                 className={`flex-1 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                   mode === "signin"
-                    ? "bg-white text-neutral-950 shadow-xs"
-                    : "text-neutral-500 hover:text-neutral-900"
+                    ? "bg-surface text-foreground shadow-xs"
+                    : "text-muted hover:text-foreground"
                 }`}
               >
                 Đăng Nhập (Sign In)
@@ -90,8 +90,8 @@ function AuthModal({ onClose, isOpen, mode, onModeChange }: AuthModalProps) {
                 onClick={() => onModeChange("signup")}
                 className={`flex-1 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                   mode === "signup"
-                    ? "bg-white text-neutral-950 shadow-xs"
-                    : "text-neutral-500 hover:text-neutral-900"
+                    ? "bg-surface text-foreground shadow-xs"
+                    : "text-muted hover:text-foreground"
                 }`}
               >
                 Đăng Ký (Register)

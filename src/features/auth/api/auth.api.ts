@@ -1,4 +1,5 @@
-import { requestData, requestNoContent } from "@/src/shared/lib/api";
+import { requestData } from "@/src/shared/lib/api";
+import { refreshSession, logoutSession } from "@/src/shared/lib/auth-session";
 import type {
   AuthResponse,
   LoginInput,
@@ -13,24 +14,13 @@ export const authApi = {
   login: (data: LoginInput): Promise<AuthResponse> =>
     requestData({ method: "POST", url: "/auth/login", data }),
 
-  refresh: (refreshToken: string): Promise<AuthResponse> =>
-    requestData({
-      method: "POST",
-      url: "/auth/refresh",
-      data: { refreshToken },
-    }),
+  refresh: refreshSession,
+  logout: logoutSession,
 
-  logout: (refreshToken: string): Promise<void> =>
-    requestNoContent({
-      method: "POST",
-      url: "/auth/logout",
-      data: { refreshToken },
-    }),
-
-  getProfile: (accessToken: string): Promise<UserType> =>
+  getProfile: (): Promise<UserType> =>
     requestData({
       method: "GET",
       url: "/users/me",
-      headers: { Authorization: `Bearer ${accessToken}` },
+      requiresAuth: true,
     }),
 };

@@ -52,18 +52,18 @@ export default function ProductPurchase({ product }: { product: Product }) {
 
   return (
     <div className="lg:sticky lg:top-28">
-      <p className="mb-5 text-[10px] tracking-[0.24em] text-neutral-500">
+      <p className="mb-5 text-[10px] tracking-[0.24em] text-muted">
         ATELIER / {product.category?.name.toUpperCase() ?? "COLLECTION"}
       </p>
       <h1 className="max-w-xl text-4xl font-normal leading-[1.12] tracking-[-0.04em] sm:text-5xl xl:text-6xl">
         {product.name}
       </h1>
-      <p className="mt-5 max-w-md text-sm leading-7 text-neutral-500">
+      <p className="mt-5 max-w-md text-sm leading-7 text-muted">
         {product.description || "Thông tin sản phẩm đang được cập nhật."}
       </p>
 
       <div
-        className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-neutral-200 py-6"
+        className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-line py-6"
         aria-live="polite"
       >
         <div className="flex items-baseline gap-3">
@@ -72,14 +72,12 @@ export default function ProductPurchase({ product }: { product: Product }) {
               ? formatPrice(variant.priceAmount, variant.currency)
               : "Chưa có giá"}
           </p>
-          {compareAt && (
-            <del className="text-sm text-neutral-400">{compareAt}</del>
-          )}
+          {compareAt && <del className="text-sm text-subtle">{compareAt}</del>}
         </div>
-        <p className="flex items-center gap-2 text-[11px] text-neutral-500">
+        <p className="flex items-center gap-2 text-[11px] text-muted">
           <span
             aria-hidden
-            className={`h-1.5 w-1.5 rounded-full ${soldOut ? "bg-neutral-300" : "bg-emerald-700"}`}
+            className={`h-1.5 w-1.5 rounded-full ${soldOut ? "bg-line" : "bg-emerald-700"}`}
           />
           {soldOut
             ? "Tạm hết hàng"
@@ -110,7 +108,7 @@ export default function ProductPurchase({ product }: { product: Product }) {
           type="button"
           onClick={addToCart}
           disabled={soldOut || mutation.isPending || status === "restoring"}
-          className="flex h-12 min-w-48 flex-1 items-center justify-center gap-3 bg-neutral-900 px-5 text-xs font-medium text-white transition hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-4 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-12 min-w-48 flex-1 items-center justify-center gap-3 bg-action px-5 text-xs font-medium text-action-foreground transition hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-4 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {mutation.isPending ? (
             <Loader2 aria-hidden className="h-4 w-4 animate-spin" />
@@ -130,33 +128,33 @@ export default function ProductPurchase({ product }: { product: Product }) {
       </div>
       <div aria-live="polite" className="mt-3 text-xs leading-5">
         {mutation.isSuccess && (
-          <p className="text-emerald-800">
+          <p className="text-positive">
             Đã thêm {mutation.variables.quantity} sản phẩm vào giỏ hàng.
           </p>
         )}
         {mutation.isError && (
-          <p role="alert" className="text-red-700">
+          <p role="alert" className="text-danger">
             {mutation.error.message}
           </p>
         )}
       </div>
 
-      <dl className="mt-8 space-y-3 border-t border-neutral-200 pt-6 text-xs">
+      <dl className="mt-8 space-y-3 border-t border-line pt-6 text-xs">
         <div className="flex justify-between gap-4">
-          <dt className="text-neutral-400">Mã sản phẩm</dt>
+          <dt className="text-subtle">Mã sản phẩm</dt>
           <dd className="break-all text-right font-mono text-[10px]">
             {variant?.sku ?? "—"}
           </dd>
         </div>
         <div className="flex justify-between gap-4">
-          <dt className="text-neutral-400">Danh mục</dt>
+          <dt className="text-subtle">Danh mục</dt>
           <dd>{product.category?.name ?? "Chưa phân loại"}</dd>
         </div>
       </dl>
       {product.category && (
         <Link
           href={`/categories/${encodeURIComponent(product.category.slug)}`}
-          className="mt-8 inline-flex items-center gap-2 border-b border-neutral-900 pb-1 text-xs"
+          className="mt-8 inline-flex items-center gap-2 border-b border-foreground pb-1 text-xs"
         >
           Khám phá cùng danh mục
           <ArrowUpRight aria-hidden className="h-3 w-3" />

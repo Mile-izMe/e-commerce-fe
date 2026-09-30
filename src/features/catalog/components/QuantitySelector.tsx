@@ -13,7 +13,7 @@ export default function QuantitySelector({
 }) {
   return (
     <div
-      className="inline-flex h-12 items-center border border-neutral-300"
+      className="inline-flex h-12 items-center border border-line"
       role="group"
       aria-label="Số lượng"
     >
@@ -22,7 +22,7 @@ export default function QuantitySelector({
         aria-label="Giảm số lượng"
         disabled={disabled || value <= 1}
         onClick={() => onChange(value - 1)}
-        className="h-full px-4 hover:bg-neutral-100 disabled:opacity-30"
+        className="h-full px-4 hover:bg-surface-muted disabled:opacity-30"
       >
         <Minus aria-hidden className="h-3 w-3" />
       </button>
@@ -34,7 +34,7 @@ export default function QuantitySelector({
         aria-label="Tăng số lượng"
         disabled={disabled || value >= max}
         onClick={() => onChange(value + 1)}
-        className="h-full px-4 hover:bg-neutral-100 disabled:opacity-30"
+        className="h-full px-4 hover:bg-surface-muted disabled:opacity-30"
       >
         <Plus aria-hidden className="h-3 w-3" />
       </button>

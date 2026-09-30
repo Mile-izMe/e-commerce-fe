@@ -26,7 +26,7 @@ export default function VariantSelector({
               onChange={() => onChange(variant.id)}
               className="peer sr-only"
             />
-            <span className="flex min-w-20 flex-col gap-1 border border-neutral-200 px-4 py-3 text-center text-xs transition peer-checked:border-neutral-900 peer-checked:bg-neutral-900 peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-disabled:opacity-50">
+            <span className="flex min-w-20 flex-col gap-1 border border-line px-4 py-3 text-center text-xs transition peer-checked:border-foreground peer-checked:bg-action peer-checked:text-action-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-disabled:opacity-50">
               <span>
                 {variant.name === "Default" ? "Tiêu chuẩn" : variant.name}
               </span>

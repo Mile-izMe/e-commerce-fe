@@ -1,7 +1,8 @@
 import type { AuthResponse, UserType } from "@/src/features/auth/types";
 import { create } from "zustand";
 
-type AuthStatus = "restoring" | "authenticated" | "unauthenticated" | "restoreFailed";
+type AuthStatus =
+  "restoring" | "authenticated" | "unauthenticated" | "restoreFailed";
 const REFRESH_TOKEN_KEY = "atelier.refreshToken";
 
 export function getStoredRefreshToken(): string | null {
@@ -34,33 +35,48 @@ function saveRefreshToken(token: string | null) {
 }
 
 interface AuthState {
+  sessionVersion: number;
   user: UserType | null;
   accessToken: string | null;
   refreshToken: string | null;
   status: AuthStatus;
   setAuth: (session: AuthResponse) => void;
+  applyRefresh: (session: AuthResponse) => void;
   clearAuth: () => void;
   setRestoreFailed: () => void;
 }
 
 // Access token stays in memory; localStorage keeps the refresh token across tabs and restarts.
 export const useAuthStore = create<AuthState>((set) => ({
+  sessionVersion: 0,
   user: null,
   accessToken: null,
   refreshToken: null,
   status: "restoring",
   setAuth: ({ user, accessToken, refreshToken }) => {
     saveRefreshToken(refreshToken);
+    set((state) => ({
+      user,
+      accessToken,
+      refreshToken,
+      status: "authenticated",
+      sessionVersion: state.sessionVersion + 1,
+    }));
+  },
+  // Rotation keeps the same logical session; login/logout change its version.
+  applyRefresh: ({ user, accessToken, refreshToken }) => {
+    saveRefreshToken(refreshToken);
     set({ user, accessToken, refreshToken, status: "authenticated" });
   },
   clearAuth: () => {
     saveRefreshToken(null);
-    set({
+    set((state) => ({
+      sessionVersion: state.sessionVersion + 1,
       user: null,
       accessToken: null,
       refreshToken: null,
       status: "unauthenticated",
-    });
+    }));
   },
   setRestoreFailed: () => set({ status: "restoreFailed" }),
 }));

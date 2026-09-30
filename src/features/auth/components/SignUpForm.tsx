@@ -6,7 +6,7 @@ import type { RegisterInput } from "../types";
 type SignUpFields = RegisterInput & { confirmPassword: string };
 
 const inputClass =
-  "w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-xs text-neutral-900 focus:border-neutral-950 focus:outline-none sm:text-sm";
+  "w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-xs text-foreground focus:border-foreground focus:outline-none sm:text-sm";
 
 function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
   const { mutateAsync: registerAccount, isPending } = useRegister();
@@ -45,7 +45,7 @@ function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
       <div>
         <label
           htmlFor="signup-email"
-          className="mb-1 block text-xs font-medium text-neutral-700"
+          className="mb-1 block text-xs font-medium text-muted"
         >
           Email
         </label>
@@ -65,14 +65,14 @@ function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
           })}
         />
         {errors.email && (
-          <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
+          <p className="mt-1 text-xs text-danger">{errors.email.message}</p>
         )}
       </div>
 
       <div>
         <label
           htmlFor="signup-username"
-          className="mb-1 block text-xs font-medium text-neutral-700"
+          className="mb-1 block text-xs font-medium text-muted"
         >
           Tên đăng nhập
         </label>
@@ -91,14 +91,14 @@ function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
           })}
         />
         {errors.username && (
-          <p className="mt-1 text-xs text-red-600">{errors.username.message}</p>
+          <p className="mt-1 text-xs text-danger">{errors.username.message}</p>
         )}
       </div>
 
       <div>
         <label
           htmlFor="signup-name"
-          className="mb-1 block text-xs font-medium text-neutral-700"
+          className="mb-1 block text-xs font-medium text-muted"
         >
           Tên hiển thị
         </label>
@@ -117,14 +117,14 @@ function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
           })}
         />
         {errors.name && (
-          <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
+          <p className="mt-1 text-xs text-danger">{errors.name.message}</p>
         )}
       </div>
 
       <div>
         <label
           htmlFor="signup-password"
-          className="mb-1 block text-xs font-medium text-neutral-700"
+          className="mb-1 block text-xs font-medium text-muted"
         >
           Mật khẩu
         </label>
@@ -141,14 +141,14 @@ function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
           })}
         />
         {errors.password && (
-          <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>
+          <p className="mt-1 text-xs text-danger">{errors.password.message}</p>
         )}
       </div>
 
       <div>
         <label
           htmlFor="signup-confirm"
-          className="mb-1 block text-xs font-medium text-neutral-700"
+          className="mb-1 block text-xs font-medium text-muted"
         >
           Nhập lại mật khẩu
         </label>
@@ -165,7 +165,7 @@ function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
           })}
         />
         {errors.confirmPassword && (
-          <p className="mt-1 text-xs text-red-600">
+          <p className="mt-1 text-xs text-danger">
             {errors.confirmPassword.message}
           </p>
         )}
@@ -174,7 +174,7 @@ function SignUpForm({ onSuccess }: { onSuccess?: () => void }) {
       <button
         type="submit"
         disabled={isPending}
-        className="cursor-pointer flex w-full items-center justify-center gap-2 rounded-full bg-neutral-950 px-6 py-3.5 text-xs font-medium text-white transition hover:bg-neutral-800 disabled:opacity-50 sm:text-sm"
+        className="cursor-pointer flex w-full items-center justify-center gap-2 rounded-full bg-action px-6 py-3.5 text-xs font-medium text-action-foreground transition hover:bg-action-hover disabled:opacity-50 sm:text-sm"
       >
         {isPending ? (
           <Loader2 className="h-5 w-5 animate-spin" />

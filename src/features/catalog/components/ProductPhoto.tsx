@@ -21,7 +21,7 @@ export default function ProductPhoto({
   if (!src || src === failedUrl || !/^(https?:\/\/|\/(?!\/))/.test(src)) {
     return (
       <div
-        className="flex h-full min-h-20 items-center justify-center text-neutral-400"
+        className="flex h-full min-h-20 items-center justify-center text-subtle"
         role="img"
         aria-label={`Chưa có ảnh: ${alt}`}
       >

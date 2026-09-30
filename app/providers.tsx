@@ -17,6 +17,23 @@ function RestoreAuthSession() {
   const queryClient = useQueryClient();
   const started = useRef(false);
 
+  useEffect(
+    () =>
+      useAuthStore.subscribe((session, previous) => {
+        if (session.sessionVersion !== previous.sessionVersion) {
+          const filters = {
+            predicate: (query: { queryKey: readonly unknown[] }) =>
+              query.queryKey[0] === "auth" || query.queryKey[0] === "cart",
+          };
+          void queryClient.cancelQueries(filters);
+          queryClient.removeQueries(filters);
+        }
+        if (session.user)
+          queryClient.setQueryData(["auth", "me"], session.user);
+      }),
+    [queryClient],
+  );
+
   useEffect(() => {
     if (started.current) return;
     started.current = true;
@@ -27,21 +44,10 @@ function RestoreAuthSession() {
       return;
     }
 
-    void authApi
-      .refresh(refreshToken)
-      .then((session) => {
-        if (useAuthStore.getState().status !== "restoring") return;
-        useAuthStore.getState().setAuth(session);
-        queryClient.setQueryData(["auth", "me"], session.user);
-      })
-      .catch((error: unknown) => {
-        if (useAuthStore.getState().status !== "restoring") return;
-        if (error instanceof ApiClientError && error.statusCode === 401) {
-          useAuthStore.getState().clearAuth();
-        } else {
-          useAuthStore.getState().setRestoreFailed();
-        }
-      });
+    void authApi.refresh().catch(() => {
+      if (useAuthStore.getState().status !== "restoring") return;
+      useAuthStore.getState().setRestoreFailed();
+    });
   }, [queryClient]);
 
   return null;
@@ -51,6 +57,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: (count, error) =>
+              !(
+                error instanceof ApiClientError &&
+                (error.statusCode === 401 || error.statusCode === 403)
+              ) && count < 2,
+          },
+        },
         mutationCache: new MutationCache({
           onError: (error) => {
             toast.error(error.message);

@@ -52,11 +52,11 @@ export default function CategoryProducts({ slug }: { slug: string }) {
   }, [hasNextPage, isFetching, isError, fetchNextPage]);
 
   return (
-    <div className="min-h-[60vh] bg-[#fafaf8] px-5 py-12 sm:px-8 sm:py-16">
+    <div className="min-h-[60vh] bg-background px-5 py-12 sm:px-8 sm:py-16">
       <div className="mx-auto max-w-7xl">
         <Link
           href="/#catalog"
-          className="mb-8 inline-flex items-center gap-2 text-xs text-neutral-500 hover:text-neutral-900"
+          className="mb-8 inline-flex items-center gap-2 text-xs text-muted hover:text-foreground"
         >
           <ArrowLeft aria-hidden className="h-4 w-4" />
           Tất cả danh mục
@@ -79,16 +79,16 @@ export default function CategoryProducts({ slug }: { slug: string }) {
           <h1 className="py-12 text-2xl">Không tìm thấy danh mục này.</h1>
         ) : (
           <>
-            <header className="mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-neutral-200 pb-8">
+            <header className="mb-10 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-8">
               <div>
-                <p className="mb-3 text-[10px] tracking-[0.25em] text-neutral-500">
+                <p className="mb-3 text-[10px] tracking-[0.25em] text-muted">
                   ATELIER / COLLECTION
                 </p>
                 <h1 className="text-3xl font-normal tracking-tight sm:text-5xl">
                   {category.name}
                 </h1>
               </div>
-              <p aria-live="polite" className="text-xs text-neutral-500">
+              <p aria-live="polite" className="text-xs text-muted">
                 {isPending
                   ? "Đang tải sản phẩm…"
                   : `${products.length} sản phẩm đã hiển thị`}
@@ -105,14 +105,14 @@ export default function CategoryProducts({ slug }: { slug: string }) {
               </div>
             )}
             {!isPending && !isError && products.length === 0 && (
-              <p className="py-16 text-center text-sm text-neutral-500">
+              <p className="py-16 text-center text-sm text-muted">
                 Danh mục này chưa có sản phẩm.
               </p>
             )}
 
             <div ref={sentinel} aria-hidden className="h-1" />
             <div
-              className="mt-10 text-center text-sm text-neutral-500"
+              className="mt-10 text-center text-sm text-muted"
               aria-live="polite"
             >
               {isError ? (
@@ -144,7 +144,7 @@ export default function CategoryProducts({ slug }: { slug: string }) {
                   type="button"
                   disabled={isFetching}
                   onClick={() => void fetchNextPage()}
-                  className="rounded-full border border-neutral-300 px-6 py-3 disabled:opacity-50"
+                  className="rounded-full border border-line px-6 py-3 disabled:opacity-50"
                 >
                   Tải thêm sản phẩm
                 </button>

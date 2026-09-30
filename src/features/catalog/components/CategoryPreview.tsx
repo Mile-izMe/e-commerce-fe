@@ -25,19 +25,19 @@ export default function CategoryPreview({
       <div className="mb-7 flex items-baseline justify-between gap-4">
         <h3
           id={`heading-${category.id}`}
-          className="text-xl font-normal tracking-tight text-neutral-900 sm:text-2xl"
+          className="text-xl font-normal tracking-tight text-foreground sm:text-2xl"
         >
-          <span className="mr-4 align-middle font-mono text-[10px] text-neutral-400">
+          <span className="mr-4 align-middle font-mono text-[10px] text-subtle">
             {String(index + 1).padStart(2, "0")}
           </span>
-          <Link href={href} className="hover:text-neutral-500">
+          <Link href={href} className="hover:text-muted">
             {category.name}
           </Link>
         </h3>
         <Link
           href={href}
           aria-label={`Xem tất cả ${category.name}`}
-          className="inline-flex shrink-0 items-center gap-2 text-xs text-neutral-600 underline underline-offset-4"
+          className="inline-flex shrink-0 items-center gap-2 text-xs text-muted underline underline-offset-4"
         >
           Xem tất cả <ArrowUpRight aria-hidden className="h-3 w-3" />
         </Link>
@@ -45,7 +45,7 @@ export default function CategoryPreview({
       {isPending ? (
         <ProductGridSkeleton />
       ) : isError ? (
-        <div role="alert" className="py-8 text-sm text-neutral-600">
+        <div role="alert" className="py-8 text-sm text-muted">
           Chưa tải được sản phẩm trong danh mục này.
           <button
             type="button"
@@ -62,7 +62,7 @@ export default function CategoryPreview({
           ))}
         </div>
       ) : (
-        <p className="py-8 text-sm text-neutral-500">
+        <p className="py-8 text-sm text-muted">
           Danh mục này đang được cập nhật sản phẩm.
         </p>
       )}

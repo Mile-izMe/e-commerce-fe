@@ -25,7 +25,7 @@ Homepage lấy tối đa 4 sản phẩm mỗi danh mục. Trang category lấy 1
 
 - Mỗi sản phẩm seed có một ảnh; gallery đã hỗ trợ nhiều ảnh từ API.
 - CTA thêm vào giỏ thật; trang giỏ hàng và checkout chưa nằm trong thay đổi này.
-- Token hết hạn được báo lỗi; người dùng có thể đăng nhập lại ngay trên detail. Chưa thêm tự refresh/retry request trong Axios.
+- API có `requiresAuth: true` tự refresh khi gặp 401 rồi thử lại một lần. Xem [session-and-theme.md](./session-and-theme.md) để hiểu cách xử lý phiên và request đồng thời.
 - Detail tải bằng hook phía client như catalog hiện tại. Khi cần SEO, có thể fetch/hydrate trên server và thêm metadata riêng từng sản phẩm.
 
 ## Kiểm tra thủ công

@@ -48,46 +48,21 @@ export function useProfile() {
     queryFn: () => {
       if (!accessToken)
         throw new ApiClientError("Chưa có phiên đăng nhập.", 401);
-      return authApi.getProfile(accessToken);
+      return authApi.getProfile();
     },
     enabled: accessToken !== null,
   });
 }
 
 export function useRefreshToken() {
-  const queryClient = useQueryClient();
-  const setAuth = useAuthStore((state) => state.setAuth);
-
-  return useMutation({
-    mutationFn: () => {
-      const refreshToken = useAuthStore.getState().refreshToken;
-      if (!refreshToken) {
-        throw new ApiClientError("Chưa có phiên đăng nhập.", 401);
-      }
-      return authApi.refresh(refreshToken);
-    },
-    onSuccess: (session: AuthResponse) => {
-      setAuth(session);
-      queryClient.setQueryData(profileKey, session.user);
-    },
-  });
+  return useMutation({ mutationFn: authApi.refresh, retry: false });
 }
 
 export function useLogout() {
-  const queryClient = useQueryClient();
-  const clearAuth = useAuthStore((state) => state.clearAuth);
-
   return useMutation({
-    mutationFn: async () => {
-      const refreshToken = useAuthStore.getState().refreshToken;
-      if (refreshToken) await authApi.logout(refreshToken);
-    },
+    mutationFn: authApi.logout,
     onSuccess: () => {
       toast.success("Đã đăng xuất");
-    },
-    onSettled: () => {
-      clearAuth();
-      queryClient.clear();
     },
   });
 }

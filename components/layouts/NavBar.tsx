@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import AccountMenu from "./AccountMenu";
+import ThemeToggle from "./ThemeToggle";
 
 export default function NavBar() {
   const user = useAuthStore((state) => state.user);
@@ -32,14 +33,14 @@ export default function NavBar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-neutral-200/60 bg-white/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 w-full border-b border-line/60 bg-surface/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-y-2 px-4 py-3 sm:px-6 lg:h-20 lg:flex-nowrap lg:px-8 lg:py-0">
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-2 text-xl font-semibold tracking-tighter text-neutral-950"
+            className="flex shrink-0 items-center gap-2 text-xl font-semibold tracking-tighter text-foreground"
             aria-label="Atelier Home"
           >
-            <span className="h-2.5 w-2.5 rounded-full bg-neutral-950" />
+            <span className="h-2.5 w-2.5 rounded-full bg-action" />
             ATELIER
           </Link>
 
@@ -57,8 +58,8 @@ export default function NavBar() {
                   href={link.path}
                   className={`flex shrink-0 items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition cursor-pointer ${
                     isActive
-                      ? "bg-neutral-950 text-white font-semibold shadow-2xs"
-                      : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100/80"
+                      ? "bg-action text-action-foreground font-semibold shadow-2xs"
+                      : "text-muted hover:text-foreground hover:bg-surface-muted/80"
                   }`}
                 >
                   <Icon
@@ -72,17 +73,18 @@ export default function NavBar() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
+            <ThemeToggle />
             {status === "restoring" ? (
               <div
                 role="status"
                 aria-label="Đang khôi phục phiên đăng nhập"
-                className="h-9 w-24 animate-pulse rounded-full bg-neutral-100"
+                className="h-9 w-24 animate-pulse rounded-full bg-surface-muted"
               />
             ) : status === "restoreFailed" ? (
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="rounded-full px-3 py-2 text-xs font-medium text-neutral-700 hover:bg-neutral-100 sm:text-sm"
+                className="rounded-full px-3 py-2 text-xs font-medium text-muted hover:bg-surface-muted sm:text-sm"
               >
                 Thử kết nối lại
               </button>
@@ -97,14 +99,14 @@ export default function NavBar() {
                 <button
                   type="button"
                   onClick={() => openAuth("signin")}
-                  className="rounded-full px-3 py-2 text-xs font-medium text-neutral-700 hover:bg-neutral-100 sm:text-sm"
+                  className="rounded-full px-3 py-2 text-xs font-medium text-muted hover:bg-surface-muted sm:text-sm"
                 >
                   Đăng nhập
                 </button>
                 <button
                   type="button"
                   onClick={() => openAuth("signup")}
-                  className="rounded-full bg-neutral-950 px-3 py-2 text-xs font-medium text-white hover:bg-neutral-800 sm:text-sm"
+                  className="rounded-full bg-action px-3 py-2 text-xs font-medium text-action-foreground hover:bg-action-hover sm:text-sm"
                 >
                   Đăng ký
                 </button>

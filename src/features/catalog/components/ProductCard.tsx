@@ -28,23 +28,23 @@ export default function ProductCard({ product }: { product: Product }) {
         href={`/products/${encodeURIComponent(product.slug)}`}
         className="block focus-visible:outline-2 focus-visible:outline-offset-4"
       >
-        <div className="relative mb-4 aspect-[4/5] overflow-hidden rounded-sm bg-[#eeece7]">
+        <div className="relative mb-4 aspect-[4/5] overflow-hidden rounded-sm bg-surface-image">
           <ProductPhoto
             src={cover?.url}
             alt={cover?.altText || product.name}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
           {soldOut && (
-            <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-[10px] text-neutral-600">
+            <span className="absolute left-3 top-3 rounded-full bg-surface/90 px-3 py-1.5 text-[10px] text-muted">
               Tạm hết hàng
             </span>
           )}
         </div>
-        <h3 className="text-sm font-medium leading-6 text-neutral-900">
+        <h3 className="text-sm font-medium leading-6 text-foreground">
           {product.name}
         </h3>
-        <p className="mt-1 text-sm text-neutral-600">{productPrice(product)}</p>
-        <p className="mt-2 text-[11px] text-neutral-400">
+        <p className="mt-1 text-sm text-muted">{productPrice(product)}</p>
+        <p className="mt-2 text-[11px] text-subtle">
           {product.variants.length} lựa chọn
         </p>
       </Link>
