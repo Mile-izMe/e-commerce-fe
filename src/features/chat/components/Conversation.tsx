@@ -1,9 +1,10 @@
 import { Hash, Menu, RefreshCw } from "lucide-react";
 import { useMessages } from "../hooks/useChat";
-import type { Channel, ConnectionState } from "../types";
 import type { ChatConnection } from "../lib/chat-connection";
+import type { Channel, ConnectionState } from "../types";
 import { MessageComposer } from "./MessageComposer";
 import { MessageList } from "./MessageList";
+import { TypingIndicator } from "./MessageTypingIndicator";
 
 const statuses = {
   connecting: "Đang kết nối",
@@ -19,6 +20,7 @@ export function Conversation({
   userId,
   userName,
   state,
+  currentTypers,
   connection,
   onOpenNavigation,
 }: {
@@ -26,11 +28,13 @@ export function Conversation({
   userId: string;
   userName: string;
   state: ConnectionState;
+  currentTypers: string[];
   connection: ChatConnection;
   onOpenNavigation: () => void;
 }) {
   const ready = state.status === "ready" && state.channelId === channel.id;
   const { history, messages } = useMessages(userId, channel.id, ready);
+
   return (
     <section className="flex h-full min-w-0 flex-1 flex-col bg-background">
       <header className="flex shrink-0 items-center justify-between gap-3 border-b border-line bg-surface px-4 py-4 sm:px-6">
@@ -88,11 +92,18 @@ export function Conversation({
           void history.refetch();
         }}
       />
+
+      <div role="status" className="min-h-6 shrink-0 px-3 sm:px-5">
+        <TypingIndicator typingNames={ready ? currentTypers : []} />
+      </div>
       <MessageComposer
         channelId={channel.id}
         ready={ready}
         onSend={(message) => connection.send(message)}
+        onTyping={(channelId) => connection.sendTyping(channelId)}
+        stopTyping={(channelId) => connection.stopTyping(channelId)}
       />
     </section>
   );
 }
+

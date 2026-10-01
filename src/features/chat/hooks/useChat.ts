@@ -12,7 +12,12 @@ import { refreshSession } from "@/src/shared/lib/auth-session";
 import { chatApi } from "../api/chat.api";
 import { ChatConnection } from "../lib/chat-connection";
 import { mergeMessages } from "../lib/messages";
-import type { ChatMessage, ConnectionState } from "../types";
+import {
+  TypingEvent,
+  type ChatMessage,
+  type ConnectionState,
+  type TypingState,
+} from "../types";
 
 export const chatKeys = {
   guilds: (userId: string) => ["chat", userId, "guilds"] as const,
@@ -75,6 +80,33 @@ export function useChatConnection(
     channelId: null,
     error: null,
   });
+
+  const [typingUsers, setTypingUsers] = useState<TypingState>({});
+  const handleUserTyping = (payload: TypingEvent) => {
+    if (payload.isTyping === true) {
+      setTypingUsers((prev) => ({
+        ...prev,
+        [payload.userId]: {
+          channelId: payload.channelId,
+          isTyping: true,
+          userName: payload.userName,
+        },
+      }));
+    } else {
+      setTypingUsers((prev) => {
+        const newState = { ...prev };
+        delete newState[payload.userId];
+        return newState;
+      });
+    }
+  };
+  // {
+  // {"user-A": { channelId: 1, isTyping: true, userName: ABC } },
+  // {"user-B": { channelId: 1, isTyping: true, userName: BCD } },
+  // }
+
+  const currentTypers = Object.values(typingUsers).map((user) => user.userName);
+
   const [connection] = useState(
     () =>
       new ChatConnection({
@@ -102,6 +134,7 @@ export function useChatConnection(
             chatKeys.live(userId, message.channelId),
             (current = []) => mergeMessages(current, [message]),
           ),
+        onTyping: handleUserTyping,
         onRoomReady: (id) => {
           void queryClient.invalidateQueries({
             queryKey: chatKeys.history(userId, id),
@@ -117,5 +150,5 @@ export function useChatConnection(
   useEffect(() => {
     connection.selectChannel(channelId);
   }, [connection, channelId]);
-  return { connection, state };
+  return { connection, state, currentTypers };
 }

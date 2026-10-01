@@ -4,6 +4,8 @@ import type {
   ChatMessage,
   ConnectionState,
   OutgoingMessage,
+  TypingEvent,
+  TypingState,
 } from "../types";
 
 // A small transport interface makes connection/auth/room races testable without React.
@@ -26,6 +28,7 @@ interface Options {
   refresh: () => Promise<unknown>;
   onState: (state: ConnectionState) => void;
   onMessage: (message: ChatMessage) => void;
+  onTyping: (payload: TypingEvent) => void;
   onRoomReady: (channelId: string) => void;
 }
 
@@ -114,6 +117,14 @@ export class ChatConnection {
       )
         this.options.onMessage(message);
     });
+    socket.on("typing.changed", (payload: TypingEvent) => {
+      if (
+        this.active() &&
+        payload.channelId === this.desired &&
+        payload.channelId === this.joined
+      )
+        this.options.onTyping(payload);
+    });
     this.retry();
   }
 
@@ -161,6 +172,25 @@ export class ChatConnection {
       );
     this.options.onMessage(message);
     return message;
+  }
+
+  async sendTyping(channelId: string): Promise<void> {
+    const request = await this.request("typing.activity", { channelId });
+    if (!this.active())
+      throw new ChatEventError(
+        "SESSION_CHANGED",
+        "Phiên đăng nhập đã thay đổi.",
+      );
+    console.log(request, "gui dc roi");
+  }
+
+  async stopTyping(channelId: string): Promise<void> {
+    await this.request("typing.stop", { channelId });
+    if (!this.active())
+      throw new ChatEventError(
+        "SESSION_CHANGED",
+        "Phiên đăng nhập đã thay đổi.",
+      );
   }
 
   private active() {

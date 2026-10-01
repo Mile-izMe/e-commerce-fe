@@ -81,6 +81,7 @@ function fixture() {
     },
     onState: (state) => states.push(state),
     onMessage: (message) => received.push(message),
+    onTyping: () => {},
     onRoomReady: (id) => joined.push(id),
   });
   return {
@@ -300,3 +301,4 @@ test("merges ack, broadcast and history exactly once in stable chronological ord
     ["a", "b", "c"],
   );
 });
+

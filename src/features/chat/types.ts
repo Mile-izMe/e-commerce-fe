@@ -35,11 +35,33 @@ export interface ChatFailure {
 }
 
 export type ChatAck<T> =
-  { success: true; data: T } | { success: false; error: ChatFailure };
+  | { success: true; data: T }
+  | { success: false; error: ChatFailure };
 export type ConnectionStatus =
-  "connecting" | "reconnecting" | "joining" | "ready" | "offline" | "error";
+  | "connecting"
+  | "reconnecting"
+  | "joining"
+  | "ready"
+  | "offline"
+  | "error";
 export interface ConnectionState {
   status: ConnectionStatus;
   channelId: string | null;
   error: string | null;
+}
+
+export type TypingState = Record<
+  string,
+  {
+    channelId: string | null;
+    userName: string;
+    isTyping: boolean;
+  }
+>;
+
+export interface TypingEvent {
+  userId: string;
+  userName: string;
+  channelId: string;
+  isTyping: boolean;
 }

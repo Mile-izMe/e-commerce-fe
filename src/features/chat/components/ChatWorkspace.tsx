@@ -38,12 +38,11 @@ export function ChatWorkspace({
   const channel =
     channels.data?.find((item) => item.id === selectedChannel) ??
     channels.data?.[0];
-  const { connection, state } = useChatConnection(
+  const { connection, state, currentTypers } = useChatConnection(
     user.id,
     sessionVersion,
     channel?.id ?? null,
   );
-  console.log(connection, "Connected to Websocket");
 
   const isOwner = guild?.ownerId === user.id;
   const userName = user.name?.trim() || user.username || user.email;
@@ -131,6 +130,7 @@ export function ChatWorkspace({
             userId={user.id}
             userName={userName}
             state={state}
+            currentTypers={currentTypers}
             connection={connection}
             onOpenNavigation={() => setNavigationOpen(true)}
           />
