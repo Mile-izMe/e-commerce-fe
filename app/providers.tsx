@@ -23,7 +23,9 @@ function RestoreAuthSession() {
         if (session.sessionVersion !== previous.sessionVersion) {
           const filters = {
             predicate: (query: { queryKey: readonly unknown[] }) =>
-              query.queryKey[0] === "auth" || query.queryKey[0] === "cart",
+              query.queryKey[0] === "auth" ||
+              query.queryKey[0] === "cart" ||
+              query.queryKey[0] === "chat",
           };
           void queryClient.cancelQueries(filters);
           queryClient.removeQueries(filters);

@@ -15,8 +15,6 @@ export default function AccountMenu({
   onSignOut,
   isSigningOut,
 }: AccountMenuProps) {
-  console.log(user);
-
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const displayName = user.name?.trim() || user.username || user.email;

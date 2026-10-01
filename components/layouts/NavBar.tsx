@@ -3,7 +3,13 @@
 import { AuthModal, useLogout } from "@/src/features/auth";
 import type { AuthMode } from "@/src/features/auth/components/AuthModal";
 import { useAuthStore } from "@/store";
-import { Briefcase, Computer, Shirt, TrendingUp } from "lucide-react";
+import {
+  Briefcase,
+  Computer,
+  Shirt,
+  TrendingUp,
+  MessageCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -25,6 +31,7 @@ export default function NavBar() {
   }
 
   const navLinks = [
+    { icon: MessageCircle, name: "Spaces", path: "/chat" },
     { icon: TrendingUp, name: "Trending", path: "/new" },
     { icon: Shirt, name: "clothing", path: "/clothes" },
     { icon: Briefcase, name: "accessories", path: "/accessory" },

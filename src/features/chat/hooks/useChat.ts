@@ -1,0 +1,121 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { io } from "socket.io-client";
+import { useAuthStore } from "@/store";
+import { refreshSession } from "@/src/shared/lib/auth-session";
+import { chatApi } from "../api/chat.api";
+import { ChatConnection } from "../lib/chat-connection";
+import { mergeMessages } from "../lib/messages";
+import type { ChatMessage, ConnectionState } from "../types";
+
+export const chatKeys = {
+  guilds: (userId: string) => ["chat", userId, "guilds"] as const,
+  channels: (userId: string, guildId: string) =>
+    ["chat", userId, "channels", guildId] as const,
+  history: (userId: string, channelId: string) =>
+    ["chat", userId, "history", channelId] as const,
+  live: (userId: string, channelId: string) =>
+    ["chat", userId, "live", channelId] as const,
+};
+
+export function useGuilds(userId: string) {
+  return useQuery({
+    queryKey: chatKeys.guilds(userId),
+    queryFn: chatApi.guilds,
+  });
+}
+
+export function useChannels(userId: string, guildId: string | undefined) {
+  return useQuery({
+    queryKey: chatKeys.channels(userId, guildId ?? ""),
+    queryFn: () => chatApi.channels(guildId!),
+    enabled: !!guildId,
+  });
+}
+
+export function useMessages(userId: string, channelId: string, ready: boolean) {
+  const history = useInfiniteQuery({
+    queryKey: chatKeys.history(userId, channelId),
+    queryFn: ({ pageParam }) => chatApi.history(channelId, pageParam),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (page) =>
+      page.meta.hasMore ? (page.meta.nextCursor ?? undefined) : undefined,
+    enabled: ready,
+  });
+  const live = useQuery<ChatMessage[]>({
+    queryKey: chatKeys.live(userId, channelId),
+    queryFn: async () => [],
+    initialData: [],
+    enabled: false,
+  });
+  return {
+    history,
+    messages: mergeMessages(
+      ...(history.data?.pages.map((page) => page.items) ?? []),
+      live.data,
+    ),
+  };
+}
+
+// One connection per mounted workspace/session. Token rotation does not recreate it.
+export function useChatConnection(
+  userId: string,
+  sessionVersion: number,
+  channelId: string | null,
+) {
+  const queryClient = useQueryClient();
+  const [state, setState] = useState<ConnectionState>({
+    status: "connecting",
+    channelId: null,
+    error: null,
+  });
+  const [connection] = useState(
+    () =>
+      new ChatConnection({
+        socket: io(
+          `${(process.env.NEXT_PUBLIC_CHAT_URL ?? "http://localhost:3001").replace(/\/$/, "")}/chat`,
+          {
+            transports: ["websocket"],
+            autoConnect: false,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000,
+          },
+        ),
+        getToken: () => useAuthStore.getState().accessToken,
+        isCurrentSession: () => {
+          const current = useAuthStore.getState();
+          return (
+            current.user?.id === userId &&
+            current.sessionVersion === sessionVersion
+          );
+        },
+        refresh: refreshSession,
+        onState: setState,
+        onMessage: (message) =>
+          queryClient.setQueryData<ChatMessage[]>(
+            chatKeys.live(userId, message.channelId),
+            (current = []) => mergeMessages(current, [message]),
+          ),
+        onRoomReady: (id) => {
+          void queryClient.invalidateQueries({
+            queryKey: chatKeys.history(userId, id),
+          });
+        },
+      }),
+  );
+
+  useEffect(() => {
+    connection.start();
+    return () => connection.close();
+  }, [connection]);
+  useEffect(() => {
+    connection.selectChannel(channelId);
+  }, [connection, channelId]);
+  return { connection, state };
+}
