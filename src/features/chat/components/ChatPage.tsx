@@ -10,6 +10,8 @@ import { ChatWorkspace } from "./ChatWorkspace";
 
 export function ChatPage() {
   const user = useAuthStore((state) => state.user);
+  console.log("hello", user);
+
   const status = useAuthStore((state) => state.status);
   const version = useAuthStore((state) => state.sessionVersion);
   const [open, setOpen] = useState(false);

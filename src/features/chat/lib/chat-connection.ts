@@ -166,7 +166,7 @@ export class ChatConnection {
     const message = await this.request<ChatMessage>("message.send", payload);
     if (!this.active())
       throw new ChatEventError(
-        "SESSION_CHANGED",
+        "SESSION_CHANGED",  
         "Phiên đăng nhập đã thay đổi.",
       );
     this.options.onMessage(message);

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
 import { ArrowDown, MessageCircle } from "lucide-react";
-import { initials, shortId } from "../lib/messages";
+import { useEffect, useRef, useState } from "react";
+import { initials } from "../lib/messages";
 import type { ChatMessage } from "../types";
 
 const time = (value: string) =>
@@ -118,9 +118,7 @@ export function MessageList({
         <ol aria-label="Tin nhắn" className="space-y-5">
           {messages.map((message, index) => {
             const own = message.authorId === userId;
-            const name = own
-              ? userName
-              : `Thành viên ${shortId(message.authorId)}`;
+            const name = own ? userName : message.name;
             const newDay =
               index === 0 ||
               day(messages[index - 1].createdAt) !== day(message.createdAt);

@@ -20,6 +20,7 @@ export interface ChatMessage {
   authorId: string;
   clientMessageId: string;
   content: string;
+  name: string;
   createdAt: string;
 }
 

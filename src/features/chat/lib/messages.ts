@@ -13,16 +13,15 @@ export function mergeMessages(
   );
 }
 
-export function initials(name: string) {
-  return (
-    name
-      .trim()
-      .split(/\s+/)
-      .map((part) => part[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase() || "A"
-  );
+export function initials(name?: string | null): string {
+  const trimmed = name?.trim();
+  if (!trimmed) return "?";
+  return trimmed
+    .split(/\s+/)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 }
 
 export function shortId(id: string) {
