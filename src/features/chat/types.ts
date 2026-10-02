@@ -56,6 +56,7 @@ export type TypingState = Record<
     channelId: string | null;
     userName: string;
     isTyping: boolean;
+    expiresAt: number;
   }
 >;
 

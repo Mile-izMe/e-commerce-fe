@@ -302,3 +302,50 @@ test("merges ack, broadcast and history exactly once in stable chronological ord
   );
 });
 
+
+test("typing is sent only in the ready room and skipped offline or after close", async () => {
+  const f = fixture();
+  f.connection.start();
+  f.connection.selectChannel("a");
+  await f.connection.sendTyping("a");
+  await f.connection.stopTyping("a");
+  assert.equal(f.socket.calls.length, 0);
+
+  f.socket.established();
+  await tick();
+  await f.connection.sendTyping("wrong-room");
+  await f.connection.stopTyping("wrong-room");
+  await f.connection.sendTyping("a");
+  await f.connection.stopTyping("a");
+  assert.deepEqual(f.socket.calls.filter((call) => call.event.startsWith("typing.")), [
+    { event: "typing.activity", payload: { channelId: "a" } },
+    { event: "typing.stop", payload: { channelId: "a" } },
+  ]);
+
+  f.socket.disconnect();
+  const count = f.socket.calls.length;
+  await f.connection.sendTyping("a");
+  await f.connection.stopTyping("a");
+  f.connection.close();
+  await f.connection.sendTyping("a");
+  await f.connection.stopTyping("a");
+  assert.equal(f.socket.calls.length, count);
+});
+
+test("typing does not emit for an old session or a room being left", async () => {
+  const f = fixture();
+  f.connection.start();
+  f.connection.selectChannel("a");
+  f.socket.established();
+  await tick();
+  f.connection.selectChannel("b");
+  const count = f.socket.calls.length;
+  await f.connection.sendTyping("a");
+  assert.equal(f.socket.calls.length, count);
+  await tick();
+  f.setCurrent(false);
+  const finalCount = f.socket.calls.length;
+  await f.connection.sendTyping("b");
+  await f.connection.stopTyping("b");
+  assert.equal(f.socket.calls.length, finalCount);
+});

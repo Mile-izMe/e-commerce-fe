@@ -4,8 +4,7 @@ import type {
   ChatMessage,
   ConnectionState,
   OutgoingMessage,
-  TypingEvent,
-  TypingState,
+  TypingEvent
 } from "../types";
 
 // A small transport interface makes connection/auth/room races testable without React.
@@ -175,24 +174,27 @@ export class ChatConnection {
   }
 
   async sendTyping(channelId: string): Promise<void> {
-    const request = await this.request("typing.activity", { channelId });
-    if (!this.active())
-      throw new ChatEventError(
-        "SESSION_CHANGED",
-        "Phiên đăng nhập đã thay đổi.",
-      );
-    console.log(request, "gui dc roi");
+    // Typing là trạng thái tạm: bỏ qua nếu chưa join đúng phòng hoặc đã offline.
+    // Không đưa activity cũ vào hàng đợi để gửi lại sau reconnect.
+    if (
+      !this.active() ||
+      !this.options.socket.connected ||
+      this.joined !== channelId ||
+      this.desired !== channelId
+    ) return;
+    await this.request("typing.activity", { channelId });
   }
 
   async stopTyping(channelId: string): Promise<void> {
+    // Cleanup phòng cũ vẫn được báo stop nếu socket còn ở phòng đó.
+    // Khi đã disconnect/rời phòng, bỏ qua; TTL bên người nhận sẽ dọn entry.
+    if (
+      !this.active() ||
+      !this.options.socket.connected ||
+      this.joined !== channelId
+    ) return;
     await this.request("typing.stop", { channelId });
-    if (!this.active())
-      throw new ChatEventError(
-        "SESSION_CHANGED",
-        "Phiên đăng nhập đã thay đổi.",
-      );
   }
-
   private active() {
     return !this.disposed && this.options.isCurrentSession();
   }

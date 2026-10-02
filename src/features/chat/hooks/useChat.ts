@@ -90,6 +90,7 @@ export function useChatConnection(
           channelId: payload.channelId,
           isTyping: true,
           userName: payload.userName,
+          expiresAt: Date.now() + 5000,
         },
       }));
     } else {
@@ -105,7 +106,9 @@ export function useChatConnection(
   // {"user-B": { channelId: 1, isTyping: true, userName: BCD } },
   // }
 
-  const currentTypers = Object.values(typingUsers).map((user) => user.userName);
+  const currentTypers = Object.values(typingUsers)
+    .filter((user) => user.channelId === channelId)
+    .map((user) => user.userName);
 
   const [connection] = useState(
     () =>
@@ -128,7 +131,14 @@ export function useChatConnection(
           );
         },
         refresh: refreshSession,
-        onState: setState,
+        onState: (nextState) => {
+          setState(nextState);
+          // Đổi channel báo joining; mất mạng/reconnect cũng rời ready.
+          // Xóa entry cũ ngay để không hiện lại khi quay về phòng hoặc reconnect.
+          if (nextState.status !== "ready") {
+            setTypingUsers((prev) => (Object.keys(prev).length ? {} : prev));
+          }
+        },
         onMessage: (message) =>
           queryClient.setQueryData<ChatMessage[]>(
             chatKeys.live(userId, message.channelId),
@@ -143,12 +153,42 @@ export function useChatConnection(
       }),
   );
 
+  /*
+  TTL để handle trường hợp đang gõ thì bị crash mạng, sập server -> Tránh infinite typing
+  Mỗi người có 1 thời điểm hết hạn: userA: 0s -> 5s, userB: 2s -> 7s
+  */
+  useEffect(() => {
+    // Tạo 1 timer chạy mỗi 1s để quét + dọn dẹp user ngừng typing (Garbage Collector)
+    const timer = setInterval(() => {
+      const now = Date.now();
+      // Điều kiện: Nếu expiresAt > now => giữ nguyên
+      // expiresAt < now => xóa user đó
+      setTypingUsers((prev) => {
+        let hasChanged = false;
+        const newState = { ...prev };
+
+        for (const [key, data] of Object.entries(newState)) {
+          if (data.expiresAt <= now) {
+            delete newState[key];
+            hasChanged = true;
+          }
+        }
+
+        return hasChanged ? newState : prev;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   useEffect(() => {
     connection.start();
     return () => connection.close();
   }, [connection]);
+
   useEffect(() => {
     connection.selectChannel(channelId);
   }, [connection, channelId]);
+
   return { connection, state, currentTypers };
 }
