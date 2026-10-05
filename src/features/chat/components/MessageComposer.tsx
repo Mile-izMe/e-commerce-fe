@@ -138,8 +138,8 @@ export function MessageComposer({
             ready ? "Viết một tin nhắn…" : "Đang chờ kết nối channel…"
           }
           value={content}
-          maxLength={2000}
-          rows={2}
+          maxLength={5000}
+          rows={5}
           disabled={pending}
           onChange={(event) => {
             // [4] Dùng value của event, không đọc content cũ ngay sau setContent.
@@ -174,7 +174,7 @@ export function MessageComposer({
       </div>
       <div className="mt-2 flex justify-between gap-3 text-[10px] text-subtle">
         <span>Enter để gửi · Shift + Enter để xuống dòng</span>
-        <span>{content.length}/2000</span>
+        <span>{content.length}/5000</span>
       </div>
     </form>
   );

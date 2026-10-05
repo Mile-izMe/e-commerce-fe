@@ -21,3 +21,7 @@ export interface AddCartItem {
   variantId: string;
   quantity: number;
 }
+
+export interface UpdateCartItem {
+  quantity: number;
+}

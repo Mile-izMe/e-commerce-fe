@@ -8,7 +8,7 @@ import { ApiClientError } from "@/src/shared/lib/api";
 import AuthModal, {
   type AuthMode,
 } from "@/src/features/auth/components/AuthModal";
-import { useAddCartItem } from "@/src/features/cart/hooks/useAddCartItem";
+import { useAddToCart } from "@/src/features/cart/hooks/useCart";
 import type { Product } from "../types";
 import { formatPrice } from "../lib/product-price";
 import { sortVariants } from "../lib/product-variants";
@@ -25,7 +25,7 @@ export default function ProductPurchase({ product }: { product: Product }) {
   const [authMode, setAuthMode] = useState<AuthMode>("signin");
   const accessToken = useAuthStore((state) => state.accessToken);
   const status = useAuthStore((state) => state.status);
-  const mutation = useAddCartItem();
+  const mutation = useAddToCart();
   const variant =
     product.variants.find((item) => item.id === selectedId) ?? first;
   const maxQuantity = Math.min(99, variant?.availableQuantity ?? 0);
@@ -172,3 +172,4 @@ export default function ProductPurchase({ product }: { product: Product }) {
     </div>
   );
 }
+
